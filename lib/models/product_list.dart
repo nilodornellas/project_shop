@@ -8,7 +8,8 @@ import 'package:projeto_shop/models/product.dart';
 
 class ProductList extends ChangeNotifier {
   final List<Product> _items = dummyProducts;
-  final _baseUrl = 'https://project-shop-e0af4-default-rtdb.firebaseio.com';
+  final _url =
+      'https://project-shop-e0af4-default-rtdb.firebaseio.com/products.json';
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -18,8 +19,12 @@ class ProductList extends ChangeNotifier {
     return _items.length;
   }
 
-  Future<void> addProduct(Product product) {
-    final future = http.post(Uri.parse('$_baseUrl/products.json'),
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+  }
+
+  Future<void> addProduct(Product product) async {
+    final response = await http.post(Uri.parse(_url),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
@@ -28,17 +33,15 @@ class ProductList extends ChangeNotifier {
           "isFavorite": product.isFavorite,
         }));
 
-    return future.then<void>((response) {
-      final id = jsonDecode(response.body)['name'];
-      _items.add(Product(
-        id: id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl,
-      ));
-      notifyListeners();
-    });
+    final id = jsonDecode(response.body)['name'];
+    _items.add(Product(
+      id: id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    ));
+    notifyListeners();
   }
 
   Future<void> updateProduct(Product product) {
