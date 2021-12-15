@@ -3,11 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:projeto_shop/data/dummy_data.dart';
 import 'package:projeto_shop/models/product.dart';
 
 class ProductList extends ChangeNotifier {
-  final List<Product> _items = dummyProducts;
+  final List<Product> _items = [];
   final _url =
       'https://project-shop-e0af4-default-rtdb.firebaseio.com/products.json';
 
@@ -21,6 +20,20 @@ class ProductList extends ChangeNotifier {
 
   Future<void> loadProducts() async {
     final response = await http.get(Uri.parse(_url));
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productData) {
+      _items.add(
+        Product(
+          id: productId,
+          name: productData['name'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners();
   }
 
   Future<void> addProduct(Product product) async {
