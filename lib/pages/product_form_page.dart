@@ -51,6 +51,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _descriptionFocus.dispose();
     _imageUrlFocus.dispose();
     _imageUrlFocus.removeListener(_updateImage);
+    _imageUrlFocus.dispose();
     super.dispose();
   }
 
