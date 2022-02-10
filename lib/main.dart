@@ -3,7 +3,7 @@ import 'package:projeto_shop/models/auth.dart';
 import 'package:projeto_shop/models/cart.dart';
 import 'package:projeto_shop/models/order_list.dart';
 import 'package:projeto_shop/models/product_list.dart';
-import 'package:projeto_shop/pages/auth_page.dart';
+import 'package:projeto_shop/pages/auth_or_home_page.dart';
 import 'package:projeto_shop/pages/cart_page.dart';
 import 'package:projeto_shop/pages/orders_page.dart';
 import 'package:projeto_shop/pages/product_detail_page.dart';
@@ -11,7 +11,6 @@ import 'package:projeto_shop/pages/product_form_page.dart';
 import 'package:projeto_shop/pages/product_page.dart';
 import 'package:projeto_shop/utils/app_routes.dart';
 import 'package:provider/provider.dart';
-import '../pages/products_overview_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,11 +45,10 @@ class MyApp extends StatelessWidget {
         ),
         //home: const ProductsOverviewPage(),
         routes: {
-          AppRoutes.AUTH: (ctx) => const AuthPage(),
-          AppRoutes.HOME: (ctx) => const ProductsOverviewPage(),
+          AppRoutes.AUTH_OR_HOME: (ctx) => const AuthOrHomePage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => const ProductDetailPage(),
           AppRoutes.CART: (ctx) => const CartPage(),
-          AppRoutes.ORDERS: (ctx) => OrdersPage(),
+          AppRoutes.ORDERS: (ctx) => const OrdersPage(),
           AppRoutes.PRODUCTS: (ctx) => const ProductsPage(),
           AppRoutes.PRODUCT_FORM: (ctx) => const ProductFormPage(),
         },
