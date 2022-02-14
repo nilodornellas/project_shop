@@ -15,7 +15,7 @@ class ProductList extends ChangeNotifier {
   List<Product> get favoriteItems =>
       _items.where((product) => product.isFavorite).toList();
 
-  ProductList(this._token, this._items);
+  ProductList([this._token = '', this._items = const []]);
 
   int get itemsCount {
     return _items.length;
@@ -35,7 +35,6 @@ class ProductList extends ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
         ),
       );
     });
@@ -51,7 +50,6 @@ class ProductList extends ChangeNotifier {
           "description": product.description,
           "price": product.price,
           "imageUrl": product.imageUrl,
-          "isFavorite": product.isFavorite,
         },
       ),
     );

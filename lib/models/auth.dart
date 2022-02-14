@@ -7,7 +7,7 @@ import 'package:projeto_shop/exceptions/auth_exception.dart';
 class Auth with ChangeNotifier {
   String? _token;
   String? _email;
-  String? _uid;
+  String? _userid;
   DateTime? _expiryDate;
 
   bool get isAuth {
@@ -23,8 +23,8 @@ class Auth with ChangeNotifier {
     return isAuth ? _email : null;
   }
 
-  String? get uid {
-    return isAuth ? _uid : null;
+  String? get userid {
+    return isAuth ? _userid : null;
   }
 
   Future<void> _authenticate(
@@ -46,7 +46,7 @@ class Auth with ChangeNotifier {
     } else {
       _token = body['idToken'];
       _email = body['email'];
-      _uid = body['localId'];
+      _userid = body['localId'];
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(body['expiresIn']),
