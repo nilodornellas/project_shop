@@ -9,7 +9,10 @@ import 'package:projeto_shop/models/order.dart';
 import 'package:projeto_shop/utils/constants.dart';
 
 class OrderList with ChangeNotifier {
+  final String _token;
   List<Order> _items = [];
+
+  OrderList(this._token, _items);
 
   List<Order> get items {
     return [..._items];
@@ -20,13 +23,14 @@ class OrderList with ChangeNotifier {
   }
 
   Future<void> loadOrders() async {
-    _items.clear();
-    final response =
-        await http.get(Uri.parse('${Constants.ORDER_BASE_URL}.json'));
+    List<Order> items = [];
+    final response = await http.get(
+      Uri.parse('${Constants.ORDER_BASE_URL}.json?auth=$_token'),
+    );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((orderId, orderData) {
-      _items.add(
+      items.add(
         Order(
           id: orderId,
           total: orderData['total'],
@@ -42,13 +46,15 @@ class OrderList with ChangeNotifier {
         ),
       );
     });
+
+    _items = items.reversed.toList();
     notifyListeners();
   }
 
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
     final response = await http.post(
-      Uri.parse('${Constants.ORDER_BASE_URL}.json'),
+      Uri.parse('${Constants.ORDER_BASE_URL}.json?auth=$_token'),
       body: jsonEncode(
         {
           "total": cart.totalAmout,
