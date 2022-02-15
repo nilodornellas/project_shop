@@ -9,13 +9,14 @@ import 'package:projeto_shop/utils/constants.dart';
 
 class ProductList extends ChangeNotifier {
   final String _token;
+  final String _userId;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
       _items.where((product) => product.isFavorite).toList();
 
-  ProductList([this._token = '', this._items = const []]);
+  ProductList([this._token = '', this._items = const [], this._userId = '']);
 
   int get itemsCount {
     return _items.length;
@@ -23,11 +24,23 @@ class ProductList extends ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http
-        .get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'));
+    final response = await http.get(
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'),
+    );
     if (response.body == 'null') return;
+
+    final favResponse = await http.get(
+      Uri.parse(
+        '${Constants.USER_FAVORITES_URL}/$_userId.json?auth=$_token',
+      ),
+    );
+
+    Map<String, dynamic> favData =
+        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
+      final isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -35,6 +48,7 @@ class ProductList extends ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
+          isFavorite: isFavorite,
         ),
       );
     });
