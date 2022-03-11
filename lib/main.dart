@@ -10,6 +10,7 @@ import 'package:projeto_shop/pages/product_detail_page.dart';
 import 'package:projeto_shop/pages/product_form_page.dart';
 import 'package:projeto_shop/pages/product_page.dart';
 import 'package:projeto_shop/utils/app_routes.dart';
+import 'package:projeto_shop/utils/custom_route.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -52,6 +53,12 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
               .copyWith(secondary: Colors.orange),
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+              TargetPlatform.android: CustomPageTransitionsBuilder(),
+            },
+          ),
         ),
         //home: const ProductsOverviewPage(),
         routes: {
